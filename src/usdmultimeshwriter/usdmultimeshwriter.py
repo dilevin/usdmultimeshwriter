@@ -26,7 +26,7 @@ class USDMultiMeshWriter:
     Sim-agnostic, multi-object OpenUSD writer for deforming triangle meshes.
 
     Usage pattern A (explicit object registration once, then stream frames):
-        w = USDSceneWriter("out.usdc", fps=60, stage_up="Z", sim_up="Y",
+        w = USDSceneWriter("out.usdc", fps=60, stage_up="Z", mesh_up="Y",
                            write_velocities=True)
         w.open()
         w.add_mesh("Cloth", face_counts, face_indices, num_points=N0)
@@ -46,7 +46,7 @@ class USDMultiMeshWriter:
 
     Notes:
     - stage_up:   'Y' or 'Z' (Blender is Z-up; recommend 'Z' for sanity)
-    - sim_up:     'Y' or 'Z' (how your coordinates are expressed)
+    - mesh_up:     'Y' or 'Z' (how your coordinates are expressed)
     - We remap sim coords → stage coords when they differ:
         Y→Z: (x, y, z) -> (x, -z, y)    [rotate +90° about X]
         Z→Y: (x, y, z) -> (x,  z,-y)    [rotate -90° about X]
@@ -59,7 +59,7 @@ class USDMultiMeshWriter:
                  stage_up: str = "Z",
                  meters_per_unit: float = 1.0,
                  root_path: str = "/World",
-                 sim_up: str = "Y",
+                 mesh_up: str = "Y",
                  write_velocities: bool = False,
                  flush_every_frame: bool = True):
         self.output_path = output_path
@@ -67,7 +67,7 @@ class USDMultiMeshWriter:
         self.stage_up = stage_up.strip().upper()   # 'Y' or 'Z'
         self.meters_per_unit = float(meters_per_unit)
         self.root_path = Sdf.Path(root_path)
-        self.sim_up = sim_up.strip().upper()       # 'Y' or 'Z'
+        self.mesh_up = mesh_up.strip().upper()       # 'Y' or 'Z'
         self.write_velocities = write_velocities
         self.flush_every_frame = flush_every_frame
 
@@ -189,8 +189,8 @@ class USDMultiMeshWriter:
         return P
 
     def _remap_to_stage(self, P: np.ndarray) -> np.ndarray:
-        """Map sim-space coords (sim_up) → stage coords (stage_up)."""
-        su = self.sim_up
+        """Map sim-space coords (mesh_up) → stage coords (stage_up)."""
+        su = self.mesh_up
         tu = self.stage_up
         if su == tu:
             return P
