@@ -46,7 +46,7 @@ class USDMultiMeshWriter:
 
     Notes:
     - stage_up:   'Y' or 'Z' (Blender is Z-up; recommend 'Z' for sanity)
-    - mesh_up:     'Y' or 'Z' (how your coordinates are expressed)
+    - mesh_up:     'Y' or 'Z' (how your mesh coordinates are expressed)
     - We remap sim coords → stage coords when they differ:
         Y→Z: (x, y, z) -> (x, -z, y)    [rotate +90° about X]
         Z→Y: (x, y, z) -> (x,  z,-y)    [rotate -90° about X]
