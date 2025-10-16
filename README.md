@@ -30,7 +30,7 @@ pip install -e .
 import numpy as np
 from usdmultimeshwriter import USDMultiMeshWriter
 
-w = USDMultiMeshWriter("out.usdc", fps=24, up_axis="Z", sim_up="Y", write_velocities=True)
+w = USDMultiMeshWriter("out.usdc", fps=24, stage_up="Z", mesh_up="Y", write_velocities=True)
 w.open()
 
 # topology once (triangles)
@@ -45,7 +45,7 @@ baseR = np.array([[ 0,0,0],[1,0,0],[ 0,1,0],[1,1,0]], dtype=np.float32)
 for k in range(60):
     fall = -0.02 * k  # Y-down in sim
     VL = baseL.copy(); VL[:,1] += fall
-    VR = baseR.copy(); VR[:,1] += fall
+    VR = baseR.copy(); VR[:,1] -= fall
     w.write_points("Left", VL,  timecode=k)
     w.write_points("Right", VR, timecode=k)
 
